@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,11 +17,25 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerVelocity;
     private bool groundedPlayer;
     private Animator anim;
-    void Start()
+    
+    private InputActionMap playerMap;
+    
+    private void Awake()
     {
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         cameraTransform = Camera.main.transform;
+        playerMap = playerInput.actions.FindActionMap("Game");
+    }
+
+    private void OnEnable()
+    {
+        playerMap.Enable();
+    }
+    
+    private void OnDisable()
+    {
+        playerMap.Disable();
     }
 
     void Update()
@@ -44,11 +59,11 @@ public class PlayerController : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
 
-        /*if (input != Vector2.zero)
+        if (input != Vector2.zero)
         {
             float targetAngle = Mathf.Atan2(input.x, input.y) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
             Quaternion rotation = Quaternion.Euler(0, targetAngle, 0);
             transform.rotation =  Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
-        }*/
+        }
     }
 }
